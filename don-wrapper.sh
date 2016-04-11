@@ -9,7 +9,7 @@ OPTS=""
 NICE=1
 
 source=${@: -1}
-filename="${source%.*}"
+FILENAME="${source%.*}"
 
 while getopts ":lmpsth" opt; do
   case $opt in
@@ -59,9 +59,9 @@ while getopts ":lmpsth" opt; do
 done
 
 crop_detect() {
-  ${CROP} --values-only ${source} &> ${filename}.tmp
-  echo "$(grep '[0-9]:' ${filename}.tmp)"
-  rm ${filename}.tmp
+  ${CROP} --values-only ${source} &> ${FILENAME}.tmp
+  echo "$(grep '[0-9]:' ${FILENAME}.tmp)"
+  rm ${FILENAME}.tmp
 }
 
 crop_candidate="$(crop_detect)"
@@ -78,20 +78,20 @@ echo "Cropping at ${crop}"
 if [[ $SMALL ]]; then
   echo "Creating a small copy..."
   nice -n ${NICE} ${TRANSCODE} ${crop} ${OPTS} --mp4 --720p "${source}"
-  mv "${filename}.mp4" "${filename} (Small).mp4"
-  mv "${filename}.mp4.log" "${filename} (Small).log"
+  mv "${FILENAME}.mp4" "${FILENAME} (Small).mp4"
+  mv "${FILENAME}.mp4.log" "${FILENAME} (Small).log"
 fi
 
 if [[ $MEDIUM ]]; then
   echo "Creating a medium copy..."
   nice -n ${NICE} ${TRANSCODE} ${crop} ${OPTS} --mp4 "${source}"
-  mv "${filename}.mp4" "${filename} (Medium).mp4"
-  mv "${filename}.mp4.log" "${filename} (Medium).log"
+  mv "${FILENAME}.mp4" "${FILENAME} (Medium).mp4"
+  mv "${FILENAME}.mp4.log" "${FILENAME} (Medium).log"
 fi
 
 if [[ $LARGE ]]; then
   echo "Creating a large copy..."
   nice -n ${NICE} ${TRANSCODE} ${crop} ${OPTS} --mp4 --big "${source}"
-  mv "${filename}.mp4" "${filename} (Large).mp4"
-  mv "${filename}.mp4.log" "${filename} (Large).log"
+  mv "${FILENAME}.mp4" "${FILENAME} (Large).mp4"
+  mv "${FILENAME}.mp4.log" "${FILENAME} (Large).log"
 fi
